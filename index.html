@@ -6,50 +6,41 @@
     <title>SHAWON TV LIVE</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { background: #0b0e14; color: #fff; font-family: sans-serif; margin: 0; padding: 15px; }
+        body { background: #0b0e14; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
         .main-container { display: flex; gap: 20px; flex-wrap: wrap; }
-        
-        /* ভিডিও সেকশন */
-        .video-section { flex: 2; min-width: 350px; }
-        .video-box { width: 100%; height: 450px; background: #000; border-radius: 10px; border: 2px solid #1e293b; overflow: hidden; }
-        video { width: 100%; height: 100%; }
-        .live-status { margin-top: 10px; color: #ff0055; font-weight: bold; font-size: 14px; }
-
-        /* চ্যানেল গ্রিড সেকশন */
-        .sidebar { flex: 1; min-width: 320px; background: #161b22; padding: 15px; border-radius: 10px; }
-        .search-box { width: 100%; padding: 10px; margin-bottom: 15px; background: #0b0e14; border: 1px solid #333; color: white; border-radius: 5px; }
+        .video-section { flex: 2; min-width: 300px; }
+        .video-box { width: 100%; height: 450px; background: #000; border-radius: 10px; border: 1px solid #333; }
+        video { width: 100%; height: 100%; border-radius: 10px; }
+        .status { margin-top: 10px; color: #ff0055; font-weight: bold; }
+        .sidebar { flex: 1; min-width: 300px; background: #161b22; padding: 15px; border-radius: 10px; }
         .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .card { background: #fff; color: #000; padding: 10px 5px; border-radius: 6px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .card:hover { transform: scale(1.05); border: 2px solid #00d4ff; }
+        .card { background: #fff; color: #000; padding: 8px 2px; border-radius: 6px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border: 2px solid #00d4ff; }
         .c-name { font-size: 10px; font-weight: bold; }
         .s-play { color: #ff0055; font-size: 7px; font-weight: bold; margin-top: 3px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <h2 style="margin: 0 0 15px 0;">SHAWON TV LIVE</h2>
+    <h2 style="margin-top: 0;">SHAWON TV LIVE</h2>
 
     <div class="main-container">
         <div class="video-section">
             <div class="video-box">
-                <video id="video" controls autoplay playsinline></video>
+                <!-- muted যোগ করা হয়েছে যাতে ভিডিও অটোপ্লে হয় -->
+                <video id="video" controls autoplay playsinline muted></video>
             </div>
-            <div class="live-status" id="statusText">● চ্যানেল নির্বাচন করুন</div>
+            <div class="status" id="statusText">● চ্যানেল নির্বাচন করুন</div>
         </div>
 
         <div class="sidebar">
-            <input type="text" class="search-box" placeholder="চ্যানেল খুঁজুন...">
             <div class="channel-grid">
+                <!-- আপনার লিঙ্কগুলো এখানে বসান -->
                 <div class="card" onclick="playChannel('https://cdn-1.live.btv.gov.bd/btv/btv/playlist.m3u8', 'BTV')">
                     <div class="c-name">BTV</div>
                     <div class="s-play">SHAWON PLAY</div>
                 </div>
-                
-                <div class="card" onclick="playChannel('https://live.jamuna.tv/hls/jamuna.m3u8', 'Jamuna TV')">
-                    <div class="c-name">Jamuna TV</div>
-                    <div class="s-play">SHAWON PLAY</div>
-                </div>
-                </div>
+            </div>
         </div>
     </div>
 
