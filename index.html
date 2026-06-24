@@ -6,59 +6,46 @@
     <title>SHAWON TV LIVE</title>
     <style>
         body { background: #0b0e14; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
+        .header-title { margin-top: 0; margin-bottom: 20px; font-size: 24px; }
         .main-container { display: flex; gap: 20px; flex-wrap: wrap; }
         
-        /* ভিডিও প্লেয়ার সেকশন */
-        .video-section { flex: 2; min-width: 300px; }
+        /* ভিডিও প্লেয়ার */
+        .video-section { flex: 2; min-width: 350px; }
         .video-box { width: 100%; height: 450px; background: #000; border-radius: 10px; border: 1px solid #333; overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; }
-        .status { margin-top: 10px; color: #ff0055; font-weight: bold; }
+        .status { margin-top: 10px; color: #ff0055; font-weight: bold; font-size: 14px; }
 
-        /* চ্যানেল লিস্ট সেকশন */
+        /* চ্যানেল সাইডবার */
         .sidebar { flex: 1; min-width: 300px; background: #161b22; padding: 15px; border-radius: 10px; }
-        .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .card { background: #fff; color: #000; padding: 10px 5px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .card { background: #fff; color: #000; padding: 8px 2px; border-radius: 6px; text-align: center; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
         .card:hover { border: 2px solid #00d4ff; }
-        .c-name { font-size: 10px; font-weight: bold; }
-        .s-play { color: #ff0055; font-size: 7px; font-weight: bold; margin-top: 3px; text-transform: uppercase; }
+        .c-name { font-size: 10px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .s-play { color: #ff0055; font-size: 7px; font-weight: bold; margin-top: 2px; text-transform: uppercase; }
+
+        @media (max-width: 768px) { .main-container { flex-direction: column; } .video-box { height: 250px; } }
     </style>
 </head>
 <body>
 
-    <h2 style="margin-top: 0;">SHAWON TV LIVE</h2>
+    <h2 class="header-title">SHAWON TV LIVE</h2>
 
     <div class="main-container">
-        <!-- ভিডিও এরিয়া -->
         <div class="video-section">
             <div class="video-box">
-                <iframe id="videoPlayer" src="YOUR_DEFAULT_CHANNEL_LINK" allowfullscreen></iframe>
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
             </div>
-            <div class="status" id="statusText">● এখন চলছে: BTV</div>
+            <div class="status" id="statusText">● এখন চলছে: অনুগ্রহ করে একটি চ্যানেল নির্বাচন করুন</div>
         </div>
 
-        <!-- চ্যানেল লিস্ট এরিয়া -->
         <div class="sidebar">
             <div class="channel-grid">
-                <!-- কার্ড ১ -->
-                <div class="card" onclick="playChannel('LINK_1', 'BTV')">
+                <!-- কার্ডগুলো এখানে -->
+                <div class="card" onclick="playChannel('LINK_HERE', 'BTV')">
                     <div class="c-name">BTV</div>
                     <div class="s-play">SHAWON PLAY</div>
                 </div>
-                <!-- কার্ড ২ -->
-                <div class="card" onclick="playChannel('LINK_2', 'Jamuna TV')">
-                    <div class="c-name">Jamuna TV</div>
-                    <div class="s-play">SHAWON PLAY</div>
-                </div>
-                <!-- কার্ড ৩ -->
-                <div class="card" onclick="playChannel('LINK_3', 'Channel 24')">
-                    <div class="c-name">Channel 24</div>
-                    <div class="s-play">SHAWON PLAY</div>
-                </div>
-                <!-- কার্ড ৪ -->
-                <div class="card" onclick="playChannel('LINK_4', 'Ekattor HD')">
-                    <div class="c-name">Ekattor HD</div>
-                    <div class="s-play">SHAWON PLAY</div>
-                </div>
+                <!-- বাকি কার্ডগুলো এভাবে যোগ করুন -->
             </div>
         </div>
     </div>
