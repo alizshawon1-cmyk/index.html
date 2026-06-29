@@ -2,40 +2,90 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>SHAWON PLAY - 100+ Live TV</title>
-    <!-- ভিডিও প্লেয়ারের স্টাইল -->
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-    
-    <!-- ভিডিও স্ট্রিমিং সাপোর্ট এর জন্য স্ক্রিপ্ট -->
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <script src="https://unpkg.com/@videojs/http-streaming@3.7.0/dist/videojs-http-streaming.min.js"></script>
-
+    <title>U Complete TV Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { background: #0d0f1a; color: #fff; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        #player-area { flex: 2; padding: 20px; display: flex; flex-direction: column; }
-        #my-video { width: 100%; height: 70vh; background: #000; border-radius: 8px; }
-        #status { margin-top: 15px; color: #ff4d6d; font-weight: bold; font-size: 20px; }
-        #sidebar { flex: 1; overflow-y: auto; padding: 20px; background: #0d0f1a; }
-        #grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .channel-btn { background: #1a1d2e; border: 1px solid #333; padding: 15px 5px; text-align: center; border-radius: 6px; cursor: pointer; transition: 0.3s; }
-        .channel-btn:hover { background: #252a41; border-color: #ff4d6d; }
-        .channel-btn h4 { margin: 0; font-size: 14px; }
-        .channel-btn p { margin: 5px 0 0; color: #ff4d6d; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        /* উজ্জ্বল সোনালী রঙ (Light/Bright Gold) */
+        :root {
+            --bg-color: #161b22; 
+            --accent-color: #e5b860; 
+        }
+
+        body { background: #0b0e14; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; gap: 20px; justify-content: center; }
+        
+        .player-box { width: 65%; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
+        
+        /* হেডার আরও বড় এবং স্টাইলিশ করা হলো */
+        .logo-header { 
+            text-align: center; 
+            font-size: 40px; 
+            font-weight: 800; 
+            color: var(--accent-color); 
+            margin-bottom: 20px; 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(229, 184, 96, 0.3);
+        }
+        
+        #video { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; }
+        
+        .channel-box { width: 35%; background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid #30363d; height: 80vh; overflow-y: auto; }
+        
+        h2 { 
+            color: var(--accent-color); 
+            border-bottom: 2px solid #30363d; 
+            padding-bottom: 10px; 
+            margin-top: 0; 
+            text-align: center; 
+            font-size: 22px;
+        }
+        
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        
+        .card { 
+            background: #21262d; 
+            padding: 20px 10px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-align: center; 
+            border: 1px solid #30363d; 
+            transition: 0.3s;
+            color: var(--accent-color); 
+        }
+
+        .card:hover { 
+            background: #30363d; 
+            border: 1px solid var(--accent-color);
+        }
+        
+        .card strong { 
+            font-size: 14px; 
+            display: block; 
+            margin-top: 10px; 
+            color: var(--accent-color); 
+            font-weight: 700;
+        }
+
+        .card:hover strong { color: #ffffff; } 
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div id="player-area">
-    <video id="my-video" class="video-js vjs-big-play-centered" controls></video>
-    <div id="status">চ্যানেল নির্বাচন করুন</div>
+<div class="player-box">
+    <div class="logo-header">U COMPLETE TV</div>
+    <video id="video" controls autoplay></video>
 </div>
 
-<div id="sidebar">
-    <div id="grid"></div>
+<div class="channel-box">
+    <h2>চ্যানেলসমূহ</h2>
+    <div class="grid" id="channelList"></div>
 </div>
 
 <script>
-    const channels = [ // BANGLADESH (25)
+    const channels = [
         { name: "BTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8", group: "Bangladesh" },
    
         { name: "SHAWON PLAY LIVE", url: "http://114.130.57.233:8080/manik-kutta-moharaza-kuttar-baccha-t.me/tvserverhd/video.m3u8?token=manik-kuttar-baccha-t.me/tvserverhd", group: "Bangladesh" },
@@ -117,20 +167,22 @@
         { name: "Discovery SD", url: "https://sm-monirul.top/toffee/play/discovery_sd.m3u8", group: "Doc" }
     ];
 
-    const player = videojs('my-video');
-    const grid = document.getElementById('grid');
-    const status = document.getElementById('status');
+   let hls = new Hls();
+    const video = document.getElementById('video');
+    const list = document.getElementById('channelList');
 
     channels.forEach(ch => {
-        const btn = document.createElement('div');
-        btn.className = 'channel-btn';
-        btn.innerHTML = `<h4>${ch.name}</h4><p>SHAWON PLAY</p>`;
-        btn.onclick = () => {
-            player.src({ src: ch.url, type: 'application/x-mpegURL' });
-            player.play();
-            status.innerText = "এখন চলছে: " + ch.name;
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `📺 <strong>${ch.name}</strong>`;
+        div.onclick = () => {
+            if (hls) hls.destroy();
+            hls = new Hls();
+            hls.loadSource(ch.url);
+            hls.attachMedia(video);
+            video.play();
         };
-        grid.appendChild(btn);
+        list.appendChild(div);
     });
 </script>
 </body>
