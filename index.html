@@ -2,43 +2,45 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>U Complete TV Player</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>SHAWON PLAY - 100+ Live TV</title>
+    <!-- ভিডিও প্লেয়ারের স্টাইল -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    
+    <!-- ভিডিও স্ট্রিমিং সাপোর্ট এর জন্য স্ক্রিপ্ট -->
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script src="https://unpkg.com/@videojs/http-streaming@3.7.0/dist/videojs-http-streaming.min.js"></script>
+
     <style>
-        :root { --bg-color: #161b22; --accent-color: #e5b860; }
-        body { background: #0b0e14; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; gap: 20px; justify-content: center; }
-        .player-box { width: 65%; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-        .logo-header { text-align: center; font-size: 40px; font-weight: 800; color: var(--accent-color); margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; }
-        #video { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; }
-        .channel-box { width: 35%; background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid #30363d; height: 80vh; overflow-y: auto; }
-        h2 { color: var(--accent-color); border-bottom: 2px solid #30363d; padding-bottom: 10px; text-align: center; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .card { background: #21262d; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; border: 1px solid #30363d; transition: 0.3s; color: var(--accent-color); }
-        .card:hover { background: #30363d; border: 1px solid var(--accent-color); }
+        body { background: #0d0f1a; color: #fff; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        #player-area { flex: 2; padding: 20px; display: flex; flex-direction: column; }
+        #my-video { width: 100%; height: 70vh; background: #000; border-radius: 8px; }
+        #status { margin-top: 15px; color: #ff4d6d; font-weight: bold; font-size: 20px; }
+        #sidebar { flex: 1; overflow-y: auto; padding: 20px; background: #0d0f1a; }
+        #grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .channel-btn { background: #1a1d2e; border: 1px solid #333; padding: 15px 5px; text-align: center; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .channel-btn:hover { background: #252a41; border-color: #ff4d6d; }
+        .channel-btn h4 { margin: 0; font-size: 14px; }
+        .channel-btn p { margin: 5px 0 0; color: #ff4d6d; font-size: 10px; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="player-box">
-    <div class="logo-header">U COMPLETE TV</div>
-    <video id="video" controls autoplay></video>
+<div id="player-area">
+    <video id="my-video" class="video-js vjs-big-play-centered" controls></video>
+    <div id="status">চ্যানেল নির্বাচন করুন</div>
 </div>
 
-<div class="channel-box">
-    <h2>চ্যানেলসমূহ</h2>
-    <div class="grid" id="channelList"></div>
+<div id="sidebar">
+    <div id="grid"></div>
 </div>
 
 <script>
-    const channels = [
-        { name: "BTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8" },
-
-        { name: "Bioscope", url: "https://cricxtv.fun/bioscope.php?file=index_1.m3u8" },
-        
-        { name: "U Sports", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8" },               
-        { name: "Channel Name", url: "https://proxyz.iptvchannels.workers.dev/?url=https%3A%2F%2Fd1kep4defqj6r1.cloudfront.net%2Fout%2Fv1%2F4e21d5a122c549289dd6feab259266e8%2Findex_1.m3u8" },
+    const channels = [ // BANGLADESH (25)
+        { name: "BTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8", group: "Bangladesh" },
+   
         { name: "SHAWON PLAY LIVE", url: "http://114.130.57.233:8080/manik-kutta-moharaza-kuttar-baccha-t.me/tvserverhd/video.m3u8?token=manik-kuttar-baccha-t.me/tvserverhd", group: "Bangladesh" },
-       
+        { name: "T Sports", url: "https://trs1.aynaott.com/tsports/index.m3u8", group: "Bangladesh" },
+        { name: "Somoy TV", url: "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8", group: "Bangladesh" },
         { name: "Jamuna TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8", group: "Bangladesh" },
         { name: "Ekattor HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8", group: "Bangladesh" },
         { name: "Independent TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8", group: "Bangladesh" },
@@ -51,16 +53,16 @@
         { name: "Channel i HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8", group: "Bangladesh" },
         { name: "Maasranga TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/1722.m3u8", group: "Bangladesh" },
         { name: "Ekushey TV", url: "http://210.4.72.204/hls-live/livepkgr/_definst_/liveevent/livestream3.m3u8", group: "Bangladesh" },
-        { name: "Movie Bangla", url: "http://alvetv.com/moviebanglatv/8080/index.m3u8" },
+        { name: "Asian TV", url: "https://mtlivestream.com/hls/asian/ytlive/index.m3u8", group: "Bangladesh" },
         { name: "Deepto TV", url: "https://byphdgllyk.gpcdn.net/hls/deeptotv/0_1/index.m3u8", group: "Bangladesh" },
         { name: "Boishakhi TV", url: "https://boishakhi.sonarbanglatv.com/boishakhi/boishakhitv/index.m3u8", group: "Bangladesh" },
         { name: "Bangla TV", url: "https://sm-monirul.top/toffee/play/bangla_tv.m3u8", group: "Bangladesh" },
-        { name: "Movie Bangla TV", url: "http://alvetv.com/moviebanglatv/8080/index.m3u8" },
+       
+        { name: "Movie Bangla", url: "http://alvetv.com/moviebanglatv/8080/index.m3u8", group: "Bangladesh" },
         { name: "Rajdhani Web", url: "https://stream.shariarsuvo.com/hls6/rajdhaniweb.m3u8", group: "Bangladesh" },
         { name: "SRK TV", url: "https://srknowapp.ncare.live/srktvhlswodrm/srktv.stream/playlist.m3u8", group: "Bangladesh" },
         { name: "G Series Drama", url: "https://vods2.aynaott.com/gseriesDrama/index.m3u8", group: "Bangladesh" },
         { name: "Channel S TV", url: "https://app.ncare.live/live-orgin/channels.stream/live-orgin/channels.stream/chunks.m3u8", group: "Bangladesh" },
-        { name: "Colors HD", url: "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/ColorsHD/default/ColorsHD-video=2137600.m3u8" },
        
 
         // ENTERTAINMENT & MOVIES (35)
@@ -78,7 +80,6 @@
         { name: "South Indian Movies", url: "https://live20.bozztv.com/giatvplayout7/giatv-209593/tracks-v1a1/mono.ts.m3u8", group: "Movies" },
         { name: "Action Hollywood", url: "https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-actionhollywood-samsungnz/playlist.m3u8", group: "Movies" },
         { name: "Aakaash Aath", url: "https://live.thebosstv.com:30443/dwlive/AAKAASH-AATH/playlist.m3u8", group: "Movies" },
-        
         { name: "Zee TV HD", url: "https://sm-monirul.top/toffee/play/zee_tv_hd.m3u8", group: "Movies" },
         { name: "Akash Crimes", url: "https://nomawnoijl.gpcdn.net/akash/crimes/playlist.m3u8", group: "Movies" },
         { name: "Akash Uniques", url: "https://nomawnoijl.gpcdn.net/akash/uniques/playlist.m3u8", group: "Movies" },
@@ -97,48 +98,39 @@
         { name: "Tom & Jerry TV", url: "https://live20.bozztv.com/giatvplayout7/giatv-208314/tracks-v1a1/mono.ts.m3u8", group: "Cartoon" },
         { name: "Doraemon TV", url: "https://live20.bozztv.com/giatvplayout7/giatv-209902/tracks-v1a1/mono.ts.m3u8", group: "Cartoon" },
 
-        // SPORTS (16)
+        // SPORTS (40)
         { name: "Sony Sports 1 HD", url: "https://sm-monirul.top/toffee/play/sony_sports_1_hd.m3u8", group: "Sports" },
         { name: "Sony Sports 2 HD", url: "https://sm-monirul.top/toffee/play/sony_sports_2_hd.m3u8", group: "Sports" },
         { name: "Sony Sports 5 HD", url: "https://sm-monirul.top/toffee/play/sony_sports_5_hd.m3u8", group: "Sports" },
         { name: "Ten Cricket", url: "https://sm-monirul.top/toffee/play/ten_cricket.m3u8", group: "Sports" },
-        { name: "Willow TV", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8" },  
         { name: "Euro Sports HD", url: "https://sm-monirul.top/toffee/play/euro_sports_hd.m3u8", group: "Sports" },
-        { name: "Sport", url: "https://cp11.adabmedia.com/hls2/sport.m3u8?nocache=1782057214460" },
+      
+        { name: "fusball Sports", url: "http://str2.v3v3v.xyz:2082/live/rokhsi25_951396/POm6KqnW/1949446.m3u8", group: "Sports" },
         { name: "Eleven Sports", url: "http://znty.dyndns.org:5010/hls/eleven1.m3u8", group: "Sports" },
-        { name: "Bein Sports Extra", url: "https://amg01334-beinsportsllc-beinxtraesp-localnow-aekzc.amagi.tv/playlistR1080p.m3u8", group: "Sports" },        
+        { name: "Bein Sports Extra", url: "https://amg01334-beinsportsllc-beinxtraesp-localnow-aekzc.amagi.tv/playlistR1080p.m3u8", group: "Sports" },
+        { name: "Sofast TV", url: "https://streams2.sofast.tv/v1/master/611d79b11b77e2f571934fd80ca1413453772ac7/e0b81a5c-6ab5-48cd-aaa9-f82de4ab5bf9/manifest.m3u8", group: "Sports" },
         { name: "As Spor", url: "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/aspor/aspor_480p.m3u8", group: "Sports" },
         { name: "NBC Puerto Rico", url: "https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8", group: "Sports" },
         { name: "Win Sports", url: "https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8", group: "Sports" },
-        { name: "Discovery SD", url: "https://sm-monirul.top/toffee/play/discovery_sd.m3u8" },
-        { name: "CGTN Docu", url: "https://english-livebkali.cgtn.com/live/doccgtn_1.m3u8" },
-        { name: "Discovery HD", url: "https://stream.ottplus.live/live/discovery_hd_abr/live/discovery_hd/chunks.m3u8?nimblesessionid=10664660" },
-
-        { name: "Discover Pakistan", url: "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/discoverpakistan.stream/playlist.m3u8" },
-        // এখানে আরও চ্যানেল যোগ করুন
+        { name: "Dazn Direct", url: "https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8", group: "Sports" },
+       
+        { name: "Discovery SD", url: "https://sm-monirul.top/toffee/play/discovery_sd.m3u8", group: "Doc" }
     ];
 
-    const video = document.getElementById('video');
-    const channelList = document.getElementById('channelList');
-
-    function playChannel(url) {
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(url);
-            hls.attachMedia(video);
-            video.play();
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = url;
-            video.play();
-        }
-    }
+    const player = videojs('my-video');
+    const grid = document.getElementById('grid');
+    const status = document.getElementById('status');
 
     channels.forEach(ch => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `<strong>${ch.name}</strong>`;
-        div.onclick = () => playChannel(ch.url);
-        channelList.appendChild(div);
+        const btn = document.createElement('div');
+        btn.className = 'channel-btn';
+        btn.innerHTML = `<h4>${ch.name}</h4><p>SHAWON PLAY</p>`;
+        btn.onclick = () => {
+            player.src({ src: ch.url, type: 'application/x-mpegURL' });
+            player.play();
+            status.innerText = "এখন চলছে: " + ch.name;
+        };
+        grid.appendChild(btn);
     });
 </script>
 </body>
