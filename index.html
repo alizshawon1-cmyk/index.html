@@ -2,184 +2,50 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>U Complete TV Player</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>My IPTV Player</title>
+    <!-- Video.js এর CSS এবং JS ফাইল লোড করা -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <style>
-        /* উজ্জ্বল সোনালী রঙ (Light/Bright Gold) */
-        :root {
-            --bg-color: #161b22; 
-            --accent-color: #e5b860; 
-        }
-
-        body { background: #0b0e14; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; gap: 20px; justify-content: center; }
-        
-        .player-box { width: 65%; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-        
-        /* হেডার আরও বড় এবং স্টাইলিশ করা হলো */
-        .logo-header { 
-            text-align: center; 
-            font-size: 40px; 
-            font-weight: 800; 
-            color: var(--accent-color); 
-            margin-bottom: 20px; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(229, 184, 96, 0.3);
-        }
-        
-        #video { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; }
-        
-        .channel-box { width: 35%; background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid #30363d; height: 80vh; overflow-y: auto; }
-        
-        h2 { 
-            color: var(--accent-color); 
-            border-bottom: 2px solid #30363d; 
-            padding-bottom: 10px; 
-            margin-top: 0; 
-            text-align: center; 
-            font-size: 22px;
-        }
-        
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        
-        .card { 
-            background: #21262d; 
-            padding: 20px 10px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            text-align: center; 
-            border: 1px solid #30363d; 
-            transition: 0.3s;
-            color: var(--accent-color); 
-        }
-
-        .card:hover { 
-            background: #30363d; 
-            border: 1px solid var(--accent-color);
-        }
-        
-        .card strong { 
-            font-size: 14px; 
-            display: block; 
-            margin-top: 10px; 
-            color: var(--accent-color); 
-            font-weight: 700;
-        }
-
-        .card:hover strong { color: #ffffff; } 
-        
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; background: #121212; color: white; }
+        .player-container { width: 80%; max-width: 800px; margin-top: 20px; }
+        .list-container { width: 80%; max-width: 800px; margin-top: 20px; background: #1e1e1e; padding: 15px; border-radius: 8px; }
+        .channel-btn { display: block; width: 100%; padding: 10px; margin-bottom: 5px; cursor: pointer; background: #333; color: white; border: none; text-align: left; border-radius: 4px; }
+        .channel-btn:hover { background: #555; }
     </style>
 </head>
 <body>
 
-<div class="player-box">
-    <div class="logo-header">U COMPLETE TV</div>
-    <video id="video" controls autoplay></video>
-</div>
+    <div class="player-container">
+        <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="800" height="450">
+            <source src="http://180.94.28.28:8097//Nagorik-TV/index.fmp4.m3u8" type="application/x-mpegURL">
+        </video>
+    </div>
 
-<div class="channel-box">
-    <h2>চ্যানেলসমূহ</h2>
-    <div class="grid" id="channelList"></div>
-</div>
+    <div class="list-container">
+        <h3>চ্যানেল লিস্ট:</h3>
+        <div id="buttons"></div>
+    </div>
 
-<script>
-    const channels = [
-     
-        { name: "BTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8" },
-        { name: "Bioscope", url: "https://cricxtv.fun/bioscope.php?file=index_1.m3u8" },
-        { name: "Sport fifa", url: "https://cp11.adabmedia.com/hls2/sport.m3u8?nocache=17820572144" }, 
-        { name: "Somoy TV", url: "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8", group: "Bangladesh" },
-        { name: "Jamuna TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8", group: "Bangladesh" },
-        { name: "Ekattor HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8", group: "Bangladesh" },
-        { name: "Independent TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8", group: "Bangladesh" },
-        { name: "DBC News", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1708/output/index.m3u8", group: "Bangladesh" },
-        { name: "News 24", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/index.m3u8", group: "Bangladesh" },
-        { name: "ATN News", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8", group: "Bangladesh" },
-        { name: "Channel 24 HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8", group: "Bangladesh" },
-        { name: "Bangla Vision", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8", group: "Bangladesh" },
-        { name: "NTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8", group: "Bangladesh" },
-        { name: "Channel i HD", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8", group: "Bangladesh" },
-        { name: "Maasranga TV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/1722.m3u8", group: "Bangladesh" },
-        { name: "Ekushey TV", url: "http://210.4.72.204/hls-live/livepkgr/_definst_/liveevent/livestream3.m3u8", group: "Bangladesh" },
-        { name: "Asian TV", url: "https://mtlivestream.com/hls/asian/ytlive/index.m3u8", group: "Bangladesh" },
-        { name: "Deepto TV", url: "https://byphdgllyk.gpcdn.net/hls/deeptotv/0_1/index.m3u8", group: "Bangladesh" },
-        { name: "Boishakhi TV", url: "https://boishakhi.sonarbanglatv.com/boishakhi/boishakhitv/index.m3u8", group: "Bangladesh" },
-        { name: "Bangla TV", url: "https://sm-monirul.top/toffee/play/bangla_tv.m3u8", group: "Bangladesh" },
-        { name: "Movie Bangla", url: "http://alvetv.com/moviebanglatv/8080/index.m3u8", group: "Bangladesh" },
-        { name: "Rajdhani Web", url: "https://stream.shariarsuvo.com/hls6/rajdhaniweb.m3u8", group: "Bangladesh" },
-        { name: "SRK TV", url: "https://srknowapp.ncare.live/srktvhlswodrm/srktv.stream/playlist.m3u8", group: "Bangladesh" },
-        { name: "G Series Drama", url: "https://vods2.aynaott.com/gseriesDrama/index.m3u8", group: "Bangladesh" },
-        { name: "Channel S TV", url: "https://app.ncare.live/live-orgin/channels.stream/live-orgin/channels.stream/chunks.m3u8", group: "Bangladesh" },
-       
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script>
+        const player = videojs('my-video');
+        const channels = [
+            {name: "Nagorik TV", url: "http://180.94.28.28:8097//Nagorik-TV/index.fmp4.m3u8"},
+            {name: "Gazi TV", url: "http://180.94.28.28:8097//GAZI-TV/index.fmp4.m3u8"},
+            {name: "Star Jalsha", url: "http://180.94.28.28:8097//STAR-JALSHA/index.fmp4.m3u8"}
+        ];
 
-        // ENTERTAINMENT & MOVIES (35)
-        { name: "Zee Bangla HD", url: "https://sm-monirul.top/toffee/play/zee_bangla.m3u8", group: "Movies" },
-        { name: "Zee Bollywood", url: "https://sm-monirul.top/toffee/play/zee_bollywood.m3u8", group: "Movies" },
-        { name: "Zee Action", url: "https://sm-monirul.top/toffee/play/zee_action.m3u8", group: "Movies" },
-        { name: "Zee Cafe HD", url: "https://sm-monirul.top/toffee/play/zee_cafe_hd.m3u8", group: "Movies" },
-        { name: "Zee Cinema HD", url: "https://sm-monirul.top/toffee/play/zee_cinema_hd.m3u8", group: "Movies" },
-        { name: "Sony Max HD", url: "https://sm-monirul.top/toffee/play/sony_max.m3u8", group: "Movies" },
-        { name: "Sony Pix HD", url: "https://sm-monirul.top/toffee/play/sonypix_hd.m3u8", group: "Movies" },
-        { name: "Goldmines", url: "https://cdn-2.pishow.tv/live/1459/master.m3u8", group: "Movies" },
-        { name: "Goldmines Movies", url: "https://cdn-2.pishow.tv/live/1461/master.m3u8", group: "Movies" },
-        { name: "B4U Movies", url: "https://amg00877-b4unew-amg00877c2-xiaomi-in-5489.playouts.now.amagi.tv/playlist.m3u8", group: "Movies" },
-        { name: "Hindi Classic 24", url: "https://vods2.aynaott.com/hindimovies/index.m3u8", group: "Movies" },
-        { name: "South Indian Movies", url: "https://live20.bozztv.com/giatvplayout7/giatv-209593/tracks-v1a1/mono.ts.m3u8", group: "Movies" },
-        { name: "Action Hollywood", url: "https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-actionhollywood-samsungnz/playlist.m3u8", group: "Movies" },
-        { name: "Aakaash Aath", url: "https://live.thebosstv.com:30443/dwlive/AAKAASH-AATH/playlist.m3u8", group: "Movies" },
-        { name: "Zee TV HD", url: "https://sm-monirul.top/toffee/play/zee_tv_hd.m3u8", group: "Movies" },
-        { name: "Akash Crimes", url: "https://nomawnoijl.gpcdn.net/akash/crimes/playlist.m3u8", group: "Movies" },
-        { name: "Akash Uniques", url: "https://nomawnoijl.gpcdn.net/akash/uniques/playlist.m3u8", group: "Movies" },
-        { name: "Akash Cine Edge", url: "https://nomawnoijl.gpcdn.net/akash/cineedge/playlist.m3u8", group: "Movies" },
-        { name: "Akash Screem", url: "https://nomawnoijl.gpcdn.net/akash/screem/playlist.m3u8", group: "Movies" },
-        { name: "Akash Intelligence", url: "https://nomawnoijl.gpcdn.net/akash/intelligence/playlist.m3u8", group: "Movies" },
-        { name: "Movies HLS", url: "https://moviethls.wns.live/hls/stream.m3u8", group: "Movies" },
-        { name: "Movie Stream", url: "https://cdn-2.pishow.tv/live/227/master.m3u8", group: "Movies" },
-        { name: "9X Tashan", url: "https://wiselp.wiseplayout.com/9X_Tashan/master.m3u8", group: "Music" },
-        { name: "9X Jalwa", url: "https://wiselp.wiseplayout.com/9X_Jalwa/master.m3u8", group: "Music" },
-        { name: "Sangeet Bangla", url: "https://cdn-4.pishow.tv/live/1143/master.m3u8", group: "Music" },
-        { name: "Bengali Beats", url: "https://tplay.live/originals/bengali-beats/index.m3u8", group: "Music" },
-        { name: "Akash Party Universe", url: "https://nomawnoijl.gpcdn.net/akash/partyuniverse/playlist.m3u8", group: "Music" },
-        { name: "Cartoon Network HD", url: "https://sm-monirul.top/toffee/play/cartoon_network_hd.m3u8", group: "Cartoon" },
-        { name: "Motu Patlu TV", url: "https://live20.bozztv.com/giatvplayout7/giatv-209622/tracks-v1a1/mono.ts.m3u8", group: "Cartoon" },
-        { name: "Tom & Jerry TV", url: "https://live20.bozztv.com/giatvplayout7/giatv-208314/tracks-v1a1/mono.ts.m3u8", group: "Cartoon" },
-        { name: "Doraemon TV", url: "https://live20.bozztv.com/giatvplayout7/giatv-209902/tracks-v1a1/mono.ts.m3u8", group: "Cartoon" },
-
-        // SPORTS (40)
-        { name: "Sony Sports 1 HD", url: "https://sm-monirul.top/toffee/play/sony_sports_1_hd.m3u8", group: "Sports" },
-        { name: "Sony Sports 2 HD", url: "https://sm-monirul.top/toffee/play/sony_sports_2_hd.m3u8", group: "Sports" },
-        { name: "Sony Sports 5 HD", url: "https://sm-monirul.top/toffee/play/sony_sports_5_hd.m3u8", group: "Sports" },
-        { name: "Willow TV", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8" },  
-        { name: "Ten Cricket", url: "https://sm-monirul.top/toffee/play/ten_cricket.m3u8", group: "Sports" },
-        { name: "Euro Sports HD", url: "https://sm-monirul.top/toffee/play/euro_sports_hd.m3u8", group: "Sports" },
-        { name: "Bein Sports Extra", url: "https://amg01334-beinsportsllc-beinxtraesp-localnow-aekzc.amagi.tv/playlistR1080p.m3u8", group: "Sports" }, 
-        { name: "As Spor", url: "https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/aspor/aspor_480p.m3u8", group: "Sports" },
-        { name: "Win Sports", url: "https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8", group: "Sports" },
-        { name: "Discovery SD", url: "https://sm-monirul.top/toffee/play/discovery_sd.m3u8" },
-        { name: "CGTN Docu", url: "https://english-livebkali.cgtn.com/live/doccgtn_1.m3u8" },
-        { name: "Discover Pakistan", url: "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/discoverpakistan.stream/playlist.m3u8" },    
-             
-    ];
-
-    let hls = new Hls();
-    const video = document.getElementById('video');
-    const list = document.getElementById('channelList');
-
-    channels.forEach(ch => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `📺 <strong>${ch.name}</strong>`;
-        div.onclick = () => {
-            if (hls) hls.destroy();
-            hls = new Hls();
-            hls.loadSource(ch.url);
-            hls.attachMedia(video);
-            video.play();
-        };
-        list.appendChild(div);
-    });
-</script>
+        const btnContainer = document.getElementById('buttons');
+        channels.forEach(ch => {
+            const btn = document.createElement('button');
+            btn.className = 'channel-btn';
+            btn.innerText = ch.name;
+            btn.onclick = () => {
+                player.src({src: ch.url, type: 'application/x-mpegURL'});
+                player.play();
+            };
+            btnContainer.appendChild(btn);
+        });
+    </script>
 </body>
 </html>
