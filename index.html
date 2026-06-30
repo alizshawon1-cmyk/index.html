@@ -17,6 +17,7 @@
     <div class="grid">
         <button onclick="playChannel('https://cdn5.zohanayaan.com:1686/hls/telmunda.m3u8?md5=gGbsi4w1wtEnNbJDJFLd1Q&expires=1782815010')">Telmunda</button>
         <button onclick="playChannel('https://cdn8.zohanayaan.com:1686/hls/ptvpk.m3u8?md5=2evzqxQIcWv6IG4uMxVbhg&expires=1782814969')">PTV Sports</button>
+        <button onclick="playChannel('https://cdn7.zohanayaan.com:1686/hls/deportesplus9.m3u8?md5=dA4_FRWaj_GT46mvjHkxPA&expires=1782815031')">Deportes Plus 9</button>
     </div>
 
     <script>
@@ -28,7 +29,12 @@
             if (hls) hls.destroy();
             hls = new Hls({
                 xhrSetup: function(xhr, loadUrl) {
-                    xhr.open('GET', loadUrl, true);
+                    // যদি ইউআরএল ইতিমধ্যে প্রক্সি যুক্ত থাকে, তবে আবার যোগ করবে না
+                    if (loadUrl.startsWith(proxy)) {
+                        xhr.open('GET', loadUrl, true);
+                    } else {
+                        xhr.open('GET', proxy + loadUrl, true);
+                    }
                 }
             });
             hls.loadSource(proxy + url);
