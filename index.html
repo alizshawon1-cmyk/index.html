@@ -1,6 +1,3 @@
-       
-
-HTML
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -11,15 +8,11 @@ HTML
         :root { --bg-color: #161b22; --accent-color: #e5b860; }
         body { background: #0b0e14; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; gap: 20px; justify-content: center; }
         .player-box { width: 65%; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-        .logo-header { text-align: center; font-size: 40px; font-weight: 800; color: var(--accent-color); margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(229, 184, 96, 0.3); }
+        .logo-header { text-align: center; font-size: 30px; font-weight: 800; color: var(--accent-color); margin-bottom: 20px; text-transform: uppercase; }
         #video { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; }
         .channel-box { width: 35%; background: var(--bg-color); padding: 15px; border-radius: 12px; border: 1px solid #30363d; height: 80vh; overflow-y: auto; }
-        h2 { color: var(--accent-color); border-bottom: 2px solid #30363d; padding-bottom: 10px; margin-top: 0; text-align: center; font-size: 22px; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .card { background: #21262d; padding: 20px 10px; border-radius: 8px; cursor: pointer; text-align: center; border: 1px solid #30363d; transition: 0.3s; color: var(--accent-color); }
-        .card:hover { background: #30363d; border: 1px solid var(--accent-color); }
-        .card strong { font-size: 14px; display: block; margin-top: 10px; color: var(--accent-color); font-weight: 700; }
-        .card:hover strong { color: #ffffff; }
+        .card { background: #21262d; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; text-align: center; border: 1px solid #30363d; color: var(--accent-color); }
+        .card:hover { background: #30363d; }
     </style>
 </head>
 <body>
@@ -30,45 +23,44 @@ HTML
 </div>
 
 <div class="channel-box">
-    <h2>চ্যানেলসমূহ</h2>
-    <div class="grid" id="channelList"></div>
+    <div id="channelList"></div>
 </div>
 
 <script>
-    const proxy = "https://my-proxy-worker.alizshawon1.workers.dev/proxy/";
     const channels = [
-
-
         { name: "Telmunda", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn5.zohanayaan.com:1686/hls/telmunda.m3u8?md5=gGbsi4w1wtEnNbJDJFLd1Q&expires=1782815010" },
-
         { name: "Deportes Plus 9", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn7.zohanayaan.com:1686/hls/deportesplus9.m3u8?md5=dA4_FRWaj_GT46mvjHkxPA&expires=1782815031" },
         { name: "Bein France 1", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn2.zohanayaan.com:1686/hls/bein1france.m3u8?md5=7zb1Fc3YWPpImBImeSA1ng&expires=1782815010" },
         { name: "PTV Sports", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn8.zohanayaan.com:1686/hls/ptvpk.m3u8?md5=2evzqxQIcWv6IG4uMxVbhg&expires=1782814969" },
         { name: "A Sports HD", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn3.zohanayaan.com:1686/hls/asportshd.m3u8?md5=MIBFQdGZ6fZNti9IRt2bPw&expires=1782814989" },
         { name: "Willow Extra", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn2.zohanayaan.com:1686/hls/willowextra.m3u8?md5=m93rEM5c89TNzpmn37J9MQ&expires=1782814989" },
-        { name: "Star 1 India", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn4.zohanayaan.com:1686/hls/star1in.m3u8?md5=2j8Mj0AHMNd2M8shHaYXKA&expires=1782814969" },
-
-
-
-// বাকি চ্যানেলগুলো একইভাবে proxy + "লিঙ্ক" ফরমেটে দিন
+        { name: "Star 1 India", url: "https://cz-pli2.hossainhridoy.workers.dev/proxy/https://cdn4.zohanayaan.com:1686/hls/star1in.m3u8?md5=2j8Mj0AHMNd2M8shHaYXKA&expires=1782814969" }
     ];
 
-    let hls = new Hls();
     const video = document.getElementById('video');
-    const list = document.getElementById('channelList');
+    let hls = new Hls({
+        // প্রক্সির মাধ্যমে সেগমেন্ট লোড করার জন্য এই সেটিংসটি জরুরি
+        xhrSetup: function(xhr, url) {
+            xhr.open('GET', 'https://cz-pli2.hossainhridoy.workers.dev/proxy/' + url, true);
+        }
+    });
 
     channels.forEach(ch => {
         const div = document.createElement('div');
         div.className = 'card';
-        div.innerHTML = `📺 <strong>${ch.name}</strong>`;
+        div.innerText = ch.name;
         div.onclick = () => {
             if (hls) hls.destroy();
-            hls = new Hls();
-            hls.loadSource(ch.url);
+            hls = new Hls({
+                xhrSetup: function(xhr, url) {
+                    xhr.open('GET', 'https://cz-pli2.hossainhridoy.workers.dev/proxy/' + url, true);
+                }
+            });
+            hls.loadSource(ch.url.split('/proxy/')[1]);
             hls.attachMedia(video);
             video.play();
         };
-        list.appendChild(div);
+        document.getElementById('channelList').appendChild(div);
     });
 </script>
 </body>
