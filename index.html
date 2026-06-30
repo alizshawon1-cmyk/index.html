@@ -2,24 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>U COMPLETE TV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U COMPLETE TV | LIVE</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { background: #121212; color: #fff; text-align: center; }
-        video { width: 90%; max-width: 800px; margin-top: 20px; border: 3px solid #333; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; padding: 20px; }
-        button { padding: 15px; cursor: pointer; background: #ff4757; color: white; border: none; border-radius: 5px; }
+        body { background-color: #0f0f0f; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+        video { width: 100%; max-width: 800px; height: 450px; background: black; border-radius: 10px; border: 2px solid #333; }
+        .channel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; padding: 0 10%; }
+        button { padding: 15px; cursor: pointer; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #ff4757; }
     </style>
 </head>
 <body>
+
     <h1>U COMPLETE TV</h1>
     <video id="video" controls autoplay></video>
-    <div class="grid">
-        <button onclick="playChannel('https://cdn5.zohanayaan.com:1686/hls/telmunda.m3u8?md5=gGbsi4w1wtEnNbJDJFLd1Q&expires=1782815010')">Telmunda</button>
+
+    <div class="channel-grid">
         <button onclick="playChannel('https://cdn8.zohanayaan.com:1686/hls/ptvpk.m3u8?md5=2evzqxQIcWv6IG4uMxVbhg&expires=1782814969')">PTV Sports</button>
+        <button onclick="playChannel('https://cdn5.zohanayaan.com:1686/hls/telmunda.m3u8?md5=gGbsi4w1wtEnNbJDJFLd1Q&expires=1782815010')">Telmunda</button>
     </div>
 
     <script>
+        // আপনার ওয়ার্কারের লিঙ্কটি এখানে বসান
         const proxy = "https://my-proxy-worker.alizshawon1.workers.dev/proxy/";
         const video = document.getElementById('video');
         let hls;
@@ -29,6 +34,7 @@
             hls = new Hls({
                 xhrSetup: function(xhr, loadUrl) {
                     xhr.open('GET', proxy + loadUrl, true);
+                    xhr.setRequestHeader('Referer', 'https://zohanayaan.com/');
                 }
             });
             hls.loadSource(proxy + url);
