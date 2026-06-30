@@ -14,7 +14,6 @@
         body { background: #0b0e14; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; gap: 20px; justify-content: center; }
         
         .player-box { width: 65%; background: var(--bg-color); padding: 20px; border-radius: 12px; border: 1px solid #30363d; }
-      
         
         /* হেডার আরও বড় এবং স্টাইলিশ করা হলো */
         .logo-header { 
@@ -87,6 +86,7 @@
 
 <script>
     const channels = [
+     
        
     // --- Bangladesh ---
     { name: "BTV", url: "https://tv.beyondtaxconsultants.com/api/proxy?url=http://198.195.239.50:8095/btv/video.m3u8", group: "Bangladesh" },
@@ -170,6 +170,7 @@
     // --- Others ---
     { name: "UNT", url: "https://tv.beyondtaxconsultants.com/api/proxy?url=http://198.195.239.50:8095/unt-s/video.m3u8", group: "Others" },
     { name: "Discovery SD", url: "https://sm-monirul.top/toffee/play/discovery_sd.m3u8", group: "Doc" },
+            
     ];
 
     let hls = new Hls();
@@ -190,5 +191,7 @@
         list.appendChild(div);
     });
 </script>
+</body>
+</html>
 </body>
 </html>
