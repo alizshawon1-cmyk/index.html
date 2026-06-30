@@ -2,28 +2,28 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>My IPTV Player</title>
-    <!-- Video.js এর CSS এবং JS ফাইল লোড করা -->
+    <title>My Web TV Player</title>
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; background: #121212; color: white; }
-        .player-container { width: 80%; max-width: 800px; margin-top: 20px; }
-        .list-container { width: 80%; max-width: 800px; margin-top: 20px; background: #1e1e1e; padding: 15px; border-radius: 8px; }
-        .channel-btn { display: block; width: 100%; padding: 10px; margin-bottom: 5px; cursor: pointer; background: #333; color: white; border: none; text-align: left; border-radius: 4px; }
-        .channel-btn:hover { background: #555; }
+        body { background-color: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+        .player-box { width: 90%; max-width: 800px; margin-top: 20px; }
+        .list-box { width: 90%; max-width: 800px; margin-top: 20px; background: #222; padding: 15px; border-radius: 10px; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 5px 0; background: #444; color: white; border: none; cursor: pointer; border-radius: 5px; text-align: left; }
+        .btn:hover { background: #666; }
     </style>
 </head>
 <body>
 
-    <div class="player-container">
+    <h2>লাইভ টিভি প্লেয়ার</h2>
+    <div class="player-box">
         <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="800" height="450">
             <source src="http://180.94.28.28:8097//Nagorik-TV/index.fmp4.m3u8" type="application/x-mpegURL">
         </video>
     </div>
 
-    <div class="list-container">
+    <div class="list-box">
         <h3>চ্যানেল লিস্ট:</h3>
-        <div id="buttons"></div>
+        <div id="channelList"></div>
     </div>
 
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
@@ -32,19 +32,20 @@
         const channels = [
             {name: "Nagorik TV", url: "http://180.94.28.28:8097//Nagorik-TV/index.fmp4.m3u8"},
             {name: "Gazi TV", url: "http://180.94.28.28:8097//GAZI-TV/index.fmp4.m3u8"},
-            {name: "Star Jalsha", url: "http://180.94.28.28:8097//STAR-JALSHA/index.fmp4.m3u8"}
+            {name: "Star Jalsha", url: "http://180.94.28.28:8097//STAR-JALSHA/index.fmp4.m3u8"},
+            {name: "Star Sports 1", url: "http://180.94.28.28:8097//STAR-SPORTS-1/index.fmp4.m3u8"}
         ];
 
-        const btnContainer = document.getElementById('buttons');
+        const container = document.getElementById('channelList');
         channels.forEach(ch => {
-            const btn = document.createElement('button');
-            btn.className = 'channel-btn';
-            btn.innerText = ch.name;
-            btn.onclick = () => {
+            const button = document.createElement('button');
+            button.className = 'btn';
+            button.innerText = ch.name;
+            button.onclick = () => {
                 player.src({src: ch.url, type: 'application/x-mpegURL'});
                 player.play();
             };
-            btnContainer.appendChild(btn);
+            container.appendChild(button);
         });
     </script>
 </body>
