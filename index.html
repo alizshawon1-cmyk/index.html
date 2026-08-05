@@ -213,15 +213,19 @@
 
     <script>
         // ======= কড়া সিকিউরিটি ও প্রটেকশন কোড =======
+        
+        // রাইট ক্লিক ও টেক্সট সিলেক্ট ব্লক
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('selectstart', e => e.preventDefault());
 
+        // কিবোর্ড শর্টকাট ব্লক (F12, Ctrl+Shift+I/J/C, Ctrl+U)
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
                 e.preventDefault();
             }
         });
 
+        // ডেভলপার টুলস ডিটেক্ট ট্র্যাপ
         setInterval(function() {
             const before = new Date().getTime();
             debugger;
@@ -231,6 +235,8 @@
             }
         }, 1000);
 
+        // ==========================================
+
         const videoEl = document.getElementById('my-video');
         const iframe = document.getElementById('custom-iframe');
         const clapprEl = document.getElementById('clappr-container');
@@ -238,7 +244,7 @@
         let clapprInstance;
         let hls; 
         let currentMode = 'videojs';
-        let currentUrl = 'aHR0cHM6Ly9iZGl4c2VydmVyLnR2aHVudGVyLnRvcC9hbnQxMDA0L3RyYWNrcy12MWExL21vbm8ubTN1OA==';
+        let currentUrl = 'aHR0cHM6Ly9iZGl4c2VydmVyLnR2aHVudGVyLnRvcC9hbnQxMDA0L3RyYWNrcy12MWExL21vbm8ubTN1OA=='; // এনক্রিপ্টেড ডিফল্ট লিংক
 
         function togglePIP() {
             if (videoEl.style.display !== 'none' && document.pictureInPictureEnabled) {
@@ -246,9 +252,8 @@
             }
         }
 
-        // সম্পূর্ণ চ্যানেলের লিস্ট Base64 এনক্রিপ্ট করা অবস্থায়
+        // সমস্ত চ্যানেলের লিংক এনক্রিপ্ট (Base64) করে রাখা হলো যাতে কেউ সোর্স কোড থেকে পড়তে না পারে
         const encryptedChannels = [
-           [
   { name: "A Sports HD", url: "https://playztv-apps.pages.dev/asports/index.m3u8", logo: "https://i.postimg.cc/W1z5BGPZ/20240823_024712.png", group: "𝐒𝐩𝐨𝐫𝐭𝐬" },
   { name: "Star Sports 1 HD", url: "https://tvsen7.aynaott.com/sspts1/tracks-v1a1/mono.ts.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Star_Sports_1_HD.png", group: "Sports" },
   { name: "T Sports", url: "https://tvsen3.aynaott.com/Sports1/mono.m3u8", logo: "https://static.wikia.nocookie.net/etv-gspn-bangla/images/6/6e/T_Sports_HD_logo_2021.png", group: "Sports" },
@@ -333,7 +338,7 @@
   { name: "CGTN Docu", url: "https://english-livebkali.cgtn.com/live/doccgtn_1.m3u8", logo: "", group: "Documentary" },
   { name: "Discover Pakistan", url: "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/discoverpakistan.stream/playlist.m3u8", logo: "", group: "Documentary" }
 ]
-        function switchMode(mode) {
+       function switchMode(mode) {
             loadChannel(currentUrl, mode);
         }
 
@@ -341,6 +346,7 @@
             currentUrl = encodedUrl;
             currentMode = mode;
             
+            // ডিক্রিপ্ট করে আসল লিংক বের করা
             let decodedUrl = atob(encodedUrl);
 
             videoEl.style.display = 'none';
@@ -404,6 +410,7 @@
             container.appendChild(btn);
         });
 
+        // ডিফল্ট চ্যানেল লোড
         loadChannel(currentUrl, 'videojs');
     </script>
 </body>
