@@ -21,4 +21,4 @@ jobs:
 
       - name: Generate Android App package
         run: |
-          pwabuilder generate --manifest https://shawon-e1b.pages.dev/manifest.json --sw https://shawon-e1b.pages.dev/sw.js
+          pwabuilder generate --manifest https://shawon-e1b.pages.dev/manifest.json
