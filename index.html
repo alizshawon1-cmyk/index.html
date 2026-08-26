@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHAWON TV - Protected</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>SHAWON TV - Live TV Streaming, Sports, News & Bangla Channels</title>
+    <meta name="title" content="SHAWON TV - Live TV Streaming, Sports, News & Bangla Channels">
+    <meta name="description" content="Watch live TV streaming, sports channels like T Sports, A Sports, Star Sports, and Bangladeshi, Indian news & entertainment channels for free on SHAWON TV.">
+    <meta name="keywords" content="SHAWON TV, Live TV, T Sports live, A Sports HD, Bangladeshi TV channels online, Watch live sports, Free streaming website">
+    <meta name="author" content="SHAWON TV">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/">
+    <meta property="og:title" content="SHAWON TV - Live TV Streaming & Sports">
+    <meta property="og:description" content="Watch live TV streaming, sports channels like T Sports, A Sports, Star Sports, and local news channels for free.">
+    <meta property="og:image" content="https://i.postimg.cc/W1z5BGPZ/20240823_024712.png">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://yourwebsite.com/">
+    <meta name="twitter:title" content="SHAWON TV - Live TV Streaming & Sports">
+    <meta name="twitter:description" content="Watch live TV streaming, sports channels like T Sports, A Sports, Star Sports, and local news channels for free.">
+    <meta name="twitter:image" content="https://i.postimg.cc/W1z5BGPZ/20240823_024712.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/W1z5BGPZ/20240823_024712.png">
+
     <!-- Video.js -->
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
@@ -280,12 +305,10 @@
         // ADVANCED HACK-PROOF SECURITY DEFENSE
         // ==========================================
 
-        // ১. রাইট ক্লিক, টেক্সট সিলেকশন এবং ড্র্যাগ ব্লক করা
         ['contextmenu', 'selectstart', 'copy', 'cut', 'dragstart'].forEach(eventType => {
             document.addEventListener(eventType, e => e.preventDefault());
         });
 
-        // ২. সব ধরনের ডেভটুলস শর্টকাট (F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S) ব্লক করা
         document.addEventListener('keydown', function(e) {
             if (
                 e.key === 'F12' ||
@@ -298,7 +321,6 @@
             }
         });
 
-        // ৩. হার্ডকোর ডেভটুলস ও উইন্ডো সাইজ ডিটেকশন
         function checkDevTools() {
             const widthThreshold = window.outerWidth - window.innerWidth > 160;
             const heightThreshold = window.outerHeight - window.innerHeight > 160;
@@ -310,7 +332,6 @@
         }
         setInterval(checkDevTools, 300);
 
-        // ৪. ডেবাগার ট্র্যাপ লুপ
         (function() {
             const devtools = /./;
             devtools.toString = function() {
@@ -364,7 +385,7 @@
             { name: "Channel 1", url: "https://stream.ottplus.bd/live/channel_1_hd_abr/live/channel_1_hd_720/chunks.m3u8", logo: "https://i.postimg.cc/Zqgx8hm1/20260430-184013.png", group: "𝐁𝐚𝐧𝐠𝐥𝐚𝐝𝐞𝐬𝐡" },
             { name: "Somoy TV", url: "https://tvsen6.aynaott.com/4XcqdovJzbbC9WdJA9gk/index.m3u8", logo: "https://i.postimg.cc/QCKgdb09/20240822-230145.png", group: "Bangladesh" },
             { name: "Jamuna TV", url: "https://tvsen6.aynaott.com/KGdZEdA7qQ43dmPkgk1j/tracks-v1a1/mono.ts.m3u8", logo: "https://tstatic.akash-go.com/cms-ui/images/custom-content/1735560213832.png", group: "Bangladesh" },
-            { name: "Ekattor HD", url: "https://tvsen6.aynaott.com/EWDrV5QskgarZEUBb3pU/tracks-v1a1/mono.ts.m3u8?e=1782665441", logo: "https://i.postimg.cc/BnBz3S8W/20240822-230603.png", group: "𝐁𝐚𝐧𝐠𝐥𝐚𝐝𝐞𝐬𝐡" },
+            { name: "Ekattor HD", url: "https://tvsen6.aynaott.com/EWDrV5QskgarZEUBb3pU/tracks-v1a1/mono.ts.m3u8?e=1782665441", logo: "https://i.postimg.cc/BnBz3S8W/20240822-230603.png", group: "𝐁𝐚𝐧𝐠𝐥𝐚𝐝" },
             { name: "Independent TV", url: "https://stream.ottplus.bd/live/independent_tv_abr/live/independent_tv_720/chunks.m3u8", logo: "https://tstatic.akash-go.com/cms-ui/images/custom-content/1778087037971.png", group: "Bangladesh" },
             { name: "Ekhon TV", url: "https://tvsen6.aynaott.com/fbgZV3X17hwWcyfZ4pdb/tracks-v1a1/mono.ts.m3u8", logo: "https://assets-prod.services.toffeelive.com/f_png,w_300,q_85/o3v235oBcqxnFHJBkAdC/posters/159af631-796d-4342-a2a7-c272f32bcd32.png", group: "Bangladesh" },
             { name: "DBC News HD", url: "https://tvsen6.aynaott.com/pF66Tkz0qFwP2aMMqHyt/tracks-v1a1/mono.ts.m3u8?e=1782665441", logo: "https://tstatic.akash-go.com/cms-ui/images/custom-content/1770186306600.png", group: "Bangladesh" },
@@ -529,7 +550,7 @@
         });
 
         if (channels.length > 0) {
-            loadChannel(channels[0]);
+            loadChannel(channels.length > 0 ? channels[0] : null);
         }
     </script>
 </body>
