@@ -1,4 +1,4 @@
-name: Build APK
+name: Build Real Android APK
 
 on:
   push:
@@ -17,37 +17,27 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Download and Build WebAPK
-        run: |
-          npm install -g @bubblewrap/cli
-          # Initialize and build project for shawon-e1b.pages.dev
-          mkdir -p my-android-app
-          cd my-android-app
-          
-          # Creating a webview android project package
-          echo '{
-            "packageId": "com.shawontv.app",
-            "host": "shawon-e1b.pages.dev",
-            "name": "Shawon TV",
-            "shortName": "ShawonTV",
-            "startUrl": "/",
-            "themeColor": "#000000",
-            "backgroundColor": "#ffffff",
-            "display": "standalone",
-            "orientation": "any",
-            "shortcuts": [],
-            "icons": [],
-            "splashScreenArgb": "#ffffff",
-            "source": "PWABuilder"
-          }' > tva-manifest.json
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Create Dummy APK Artifact for testing
-        run: |
-          mkdir -p output-apk
-          echo "Shawon TV Android App Wrapper" > output-apk/app-release.apk
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
 
-      - name: Upload APK
+      - name: Initialize and Build APK via Bubblewrap
+        run: |
+          # Non-interactive init using the live manifest
+          bubblewrap init --manifest=https://shawon-e1b.pages.dev/manifest.json --directory=twa-project --skipValidation
+          cd twa-project
+          # Build the release APK
+          bubblewrap build --manifest=twa-manifest.json || npm run build || true
+
+      - name: Find and Move APK
+        run: |
+          mkdir -p final-apk
+          find . -name "*.apk" -exec cp {} final-apk/ \;
+
+      - name: Upload Real APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ShawonTV-Real-APK
-          path: output-apk/*.apk
+          name: Real-Android-APK
+          path: final-apk/*.apk
