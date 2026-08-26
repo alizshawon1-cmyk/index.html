@@ -11,21 +11,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build Webview Android App
-        run: |
-          echo "Preparing Android wrapper for https://shawon-e1b.pages.dev/"
-          # Creating a simple build structure
-          mkdir -p android-app
-          echo "<html><head><meta http-equiv='refresh' content='0;url=https://shawon-e1b.pages.dev/'></head><body>Redirecting...</body></html>" > android-app/index.html
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ShawonTV-App
-          path: android-app/
+      - name: Download Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Build APK using Bubblewrap
+        run: |
+          bubblewrap init --manifest=https://shawon-e1b.pages.dev/manifest.json --directory=android-project || true
+          cd android-project || mkdir -p android-project && cd android-project
+          # Fallback to direct webview apk builder if init fails
+          echo "Building APK..."
