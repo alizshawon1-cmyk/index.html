@@ -204,7 +204,7 @@
         
         .ch-btn { 
             background: #21262d; 
-            padding: 16px 8px; 
+            padding: 10px; 
             border-radius: 8px; 
             cursor: pointer; 
             text-align: center; 
@@ -215,6 +215,9 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            width: 100%;
+            height: 95px; /* বক্সের উচ্চতা বাড়ানো হয়েছে যাতে পুরো ঘর জুড়ে থাকে */
+            box-sizing: border-box;
         }
         
         .ch-btn:hover { 
@@ -223,8 +226,8 @@
         }
         
         .ch-btn img { 
-            width: 34px; 
-            height: 34px; 
+            width: 50px; /* লোগোর সাইজ বড় করা হয়েছে */
+            height: 50px; 
             object-fit: contain; 
             pointer-events: none;
         }
@@ -232,7 +235,11 @@
         .ch-btn strong { 
             font-size: 13.2px; 
             font-weight: bold; 
-            color: var(--accent-color); 
+            color: var(--accent-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
         
         .input-box { 
@@ -543,17 +550,22 @@
             const btn = document.createElement('div');
             btn.className = 'ch-btn';
             
-            const logoSrc = ch.logo ? ch.logo : 'https://i.postimg.cc/W1z5BGPZ/20240823_024712.png';
-            btn.innerHTML = `
-                <img src="${logoSrc}" alt="${ch.name}" onerror="this.src='https://i.postimg.cc/W1z5BGPZ/20240823_024712.png'">
-                <strong>${ch.name}</strong>
-            `;
+            let img = document.createElement('img');
+            img.src = ch.logo || "https://i.postimg.cc/W1z5BGPZ/20240823_024712.png";
+            img.onerror = () => { img.src = "https://i.postimg.cc/W1z5BGPZ/20240823_024712.png"; };
+            
+            let strong = document.createElement('strong');
+            strong.innerText = ch.name;
+            
+            btn.appendChild(img);
+            btn.appendChild(strong);
+            
             btn.onclick = () => loadChannel(ch);
             container.appendChild(btn);
         });
 
-        if (channels.length > 0) {
-            loadChannel(channels.length > 0 ? channels[0] : null);
+        if(channels.length > 0) {
+            loadChannel(channels[0]);
         }
     </script>
 </body>
