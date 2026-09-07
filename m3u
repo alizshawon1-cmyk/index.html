@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-Maintenance IPTV Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #sidebar {
+            width: 300px;
+            background-color: #1e1e1e;
+            overflow-y: auto;
+            border-right: 1px solid #333;
+        }
+        .channel-item {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .channel-item:hover, .channel-item.active {
+            background-color: #333;
+        }
+        .channel-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+        #main-player {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            max-height: 90vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2 style="padding: 15px; margin: 0; background: #111;">Channels</h2>
+        <div id="channel-list">Loading channels...</div>
+    </div>
+
+    <div id="main-player">
+        <video id="video" controls autoplay></video>
+    </div>
+
+    <script>
+        const API_URL = 'https://my-tv-api.alizshawon1.workers.dev/api/channels';
+        const video = document.getElementById('video');
+        const channelList = document.getElementById('channel-list');
+
+        async function loadChannels() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                channelList.innerHTML = '';
+                
+                // Object লুপ করার জন্য Object.entries ব্যবহার করা হয়েছে
+                for (const [key, channel] of Object.entries(data)) {
+                    const div = document.createElement('div');
+                    div.className = 'channel-item';
+                    div.innerHTML = `
+                        <img src="${channel.logo}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/30'">
+                        <span>${channel.name}</span>
+                    `;
+                    div.onclick = () => playStream(channel.url, div);
+                    channelList.appendChild(div);
+                }
+            } catch (error) {
+                channelList.innerHTML = '<p style="padding:15px; color:red;">Failed to load channels.</p>';
+            }
+        }
+
+        function playStream(url, element) {
+            document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', () => {
+                    video.play();
+                });
+            }
+        }
+
+        loadChannels();
+    </script>
+</body>
+</html>
