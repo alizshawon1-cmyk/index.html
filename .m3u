@@ -69,7 +69,8 @@
 
         async function loadChannels() {
             try {
-                const response = await fetch(API_URL);
+                // ব্রাউজারের ক্যাশ এড়ানোর জন্য ইউনিক টাইমস্ট্যাম্প যুক্ত করা হয়েছে
+                const response = await fetch(API_URL + '?t=' + new Date().getTime());
                 const data = await response.json();
                 
                 channelList.innerHTML = '';
