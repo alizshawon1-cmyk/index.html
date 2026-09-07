@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero-Maintenance IPTV Player</title>
-    <!-- hls.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body {
@@ -66,17 +65,23 @@
         const API_URL = 'https://my-tv-api.alizshawon1.workers.dev/api/channels';
         const video = document.getElementById('video');
         const channelList = document.getElementById('channel-list');
+        let hls = null;
 
         async function loadChannels() {
             try {
-                // ব্রাউজারের ক্যাশ এড়ানোর জন্য ইউনিক টাইমস্ট্যাম্প যুক্ত করা হয়েছে
-                const response = await fetch(API_URL + '?t=' + new Date().getTime());
+                const response = await fetch(API_URL + '?t=' + Date.now());
                 const data = await response.json();
                 
                 channelList.innerHTML = '';
                 
-                // Object লুপ করার জন্য Object.entries ব্যবহার করা হয়েছে
-                for (const [key, channel] of Object.entries(data)) {
+                const channelKeys = Object.keys(data);
+                if (channelKeys.length === 0) {
+                    channelList.innerHTML = '<p style="padding:15px;">No channels found.</p>';
+                    return;
+                }
+
+                channelKeys.forEach(key => {
+                    const channel = data[key];
                     const div = document.createElement('div');
                     div.className = 'channel-item';
                     div.innerHTML = `
@@ -85,7 +90,8 @@
                     `;
                     div.onclick = () => playStream(channel.url, div);
                     channelList.appendChild(div);
-                }
+                });
+
             } catch (error) {
                 channelList.innerHTML = '<p style="padding:15px; color:red;">Failed to load channels.</p>';
             }
@@ -95,17 +101,24 @@
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
 
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            video.pause();
+            video.src = "";
+
             if (Hls.isSupported()) {
-                const hls = new Hls();
+                hls = new Hls();
                 hls.loadSource(url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play();
+                    video.play().catch(e => console.log("Autoplay blocked:", e));
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = url;
                 video.addEventListener('loadedmetadata', () => {
-                    video.play();
+                    video.play().catch(e => console.log("Autoplay blocked:", e));
                 });
             }
         }
