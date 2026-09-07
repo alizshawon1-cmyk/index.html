@@ -1,15 +1,53 @@
 {
-  "name": "Shawon TV",
-  "short_name": "ShawonTV",
-  "start_url": "/",
-  "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "description": "Watch live TV streaming, sports channels like T Sports, A Sports, Star Sports, and Bangladeshi, Indian news &amp; entertainment channels for free on SHAWON TV PALASHBARI.",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "SHAWON TV - Live TV Streaming &amp; Sports",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "SHAWON TV - Live TV Streaming &amp; Sports",
+  "start_url": "/",
+  "theme_color": "#ffffff",
   "icons": [
     {
+      "src": "https://i.ibb.co.com/PvnVqbdS/cpt-1469868507562.jpg",
+      "type": "image/jpeg",
+      "sizes": "576x432",
+      "isSquare": false,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": true,
+      "width": 576,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    },
+    {
       "src": "https://i.postimg.cc/W1z5BGPZ/20240823_024712.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "sizes": "800x800",
+      "isSquare": true,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 800,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    },
+    {
+      "src": "https://shawon-e1b.pages.dev/favicon.ico",
+      "type": "image/x-icon",
+      "isSquare": false,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 0,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
     }
-  ]
+  ],
+  "id": "https://shawon-e1b.pages.dev/"
 }
