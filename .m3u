@@ -62,7 +62,8 @@
     </div>
 
     <script>
-        const API_URL = 'https://my-tv-api.alizshawon1.workers.dev/api/channels';
+        const WORKER_ORIGIN = 'https://my-tv-api.alizshawon1.workers.dev';
+        const API_URL = WORKER_ORIGIN + '/api/channels';
         const video = document.getElementById('video');
         const channelList = document.getElementById('channel-list');
         let hls = null;
@@ -74,21 +75,28 @@
                 
                 channelList.innerHTML = '';
                 
-                const channelKeys = Object.keys(data);
-                if (channelKeys.length === 0) {
+                // ডেটা অবজেক্ট বা অ্যারে যাই হোক না কেন তা হ্যান্ডেল করার জন্য
+                const channelsArray = Array.isArray(data) ? data : Object.values(data);
+
+                if (channelsArray.length === 0) {
                     channelList.innerHTML = '<p style="padding:15px;">No channels found.</p>';
                     return;
                 }
 
-                channelKeys.forEach(key => {
-                    const channel = data[key];
+                channelsArray.forEach(channel => {
+                    if (!channel.url || !channel.name) return;
+
                     const div = document.createElement('div');
                     div.className = 'channel-item';
                     div.innerHTML = `
-                        <img src="${channel.logo}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/30'">
+                        <img src="${channel.logo || 'https://via.placeholder.com/30'}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/30'">
                         <span>${channel.name}</span>
                     `;
-                    div.onclick = () => playStream(channel.url, div);
+                    
+                    // স্ট্রিম লিংকটিকে আমাদের ওয়ার্কার প্রক্সি রুট দিয়ে র‍্যাপ করে দেওয়া হলো
+                    const proxiedUrl = WORKER_ORIGIN + '/api/proxy?url=' + encodeURIComponent(channel.url);
+                    
+                    div.onclick = () => playStream(proxiedUrl, div);
                     channelList.appendChild(div);
                 });
 
