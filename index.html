@@ -31,6 +31,17 @@
     <meta name="twitter:title" content="SHAWON TV - Live TV Streaming & Sports">
     <meta name="twitter:description" content="Watch live TV streaming, sports channels like T Sports, A Sports, Star Sports, and local news channels for free.">
     <meta name="twitter:image" content="https://i.postimg.cc/W1z5BGPZ/20240823_024712.png">
+
+    <!-- Service Worker Registration Script -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registered!'))
+            .catch(err => console.log('Service Worker registration failed: ', err));
+        });
+      }
+    </script>
 </head>
 
 <!-- Favicon -->
